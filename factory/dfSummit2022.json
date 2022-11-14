@@ -1,0 +1,9 @@
+{
+	"name": "dfSummit2022",
+	"location": "westus3",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "e36c194f-ca71-439a-b7f5-0c79ac09e256",
+		"tenantId": "75f46c28-958a-438e-bfc5-c9c5e2bc194f"
+	}
+}
