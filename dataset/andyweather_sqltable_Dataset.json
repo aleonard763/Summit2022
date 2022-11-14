@@ -1,0 +1,73 @@
+{
+	"name": "andyweather_sqltable_Dataset",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "andyweather_sqltable_LinkedService",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "WxReadingDateTime",
+				"type": "nvarchar"
+			},
+			{
+				"name": "WxReadingOutdoorTemperature",
+				"type": "nvarchar"
+			},
+			{
+				"name": "WxReadingOutdoorHumidity",
+				"type": "nvarchar"
+			},
+			{
+				"name": "WxReadingDewpoint",
+				"type": "nvarchar"
+			},
+			{
+				"name": "WxReadingHeatIndex",
+				"type": "nvarchar"
+			},
+			{
+				"name": "WxReadingWindChill",
+				"type": "nvarchar"
+			},
+			{
+				"name": "WxReadingBarometricPressure",
+				"type": "nvarchar"
+			},
+			{
+				"name": "WxReadingRain",
+				"type": "nvarchar"
+			},
+			{
+				"name": "WxReadingWindSpeed",
+				"type": "nvarchar"
+			},
+			{
+				"name": "WxReadingWindAverage",
+				"type": "nvarchar"
+			},
+			{
+				"name": "WxReadingPeakWind",
+				"type": "nvarchar"
+			},
+			{
+				"name": "WxReadingWindDirection",
+				"type": "nvarchar"
+			},
+			{
+				"name": "WxReadingIndoorTemperature",
+				"type": "nvarchar"
+			},
+			{
+				"name": "WxReadingIndoorHumidity",
+				"type": "nvarchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "WxReading"
+		}
+	}
+}

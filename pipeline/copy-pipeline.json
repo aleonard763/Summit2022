@@ -26,11 +26,22 @@
 							"type": "DelimitedTextReadSettings"
 						}
 					},
+					"sink": {
+						"type": "AzureSqlSink",
+						"writeBehavior": "insert",
+						"sqlWriterUseTableLock": false
+					},
 					"enableStaging": false
 				},
 				"inputs": [
 					{
 						"referenceName": "andyweather_csv_file_DataSet",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "andyweather_sqltable_Dataset",
 						"type": "DatasetReference"
 					}
 				]
