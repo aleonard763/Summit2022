@@ -5,13 +5,29 @@
 			"referenceName": "andyweather_csv_blob_linkedservice",
 			"type": "LinkedServiceReference"
 		},
+		"parameters": {
+			"Container": {
+				"type": "string",
+				"defaultValue": "contaw"
+			},
+			"BlobName": {
+				"type": "string",
+				"defaultValue": "acuriteweather.CSV"
+			}
+		},
 		"annotations": [],
 		"type": "DelimitedText",
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
-				"fileName": "acuriteweather.CSV",
-				"container": "contaw"
+				"fileName": {
+					"value": "@dataset().BlobName",
+					"type": "Expression"
+				},
+				"container": {
+					"value": "@dataset().Container",
+					"type": "Expression"
+				}
 			},
 			"columnDelimiter": ",",
 			"escapeChar": "\\",
