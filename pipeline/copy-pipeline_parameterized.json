@@ -194,6 +194,16 @@
 				]
 			}
 		],
+		"parameters": {
+			"Blob": {
+				"type": "string",
+				"defaultValue": "acuriteweather.CSV"
+			},
+			"ContainerName": {
+				"type": "string",
+				"defaultValue": "contaw"
+			}
+		},
 		"annotations": []
 	}
 }
