@@ -1,0 +1,476 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "dfSummit2022"
+		},
+		"andyweather_sqltable_LinkedService_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'andyweather_sqltable_LinkedService'"
+		},
+		"Summit2022AzureKeyVault_properties_typeProperties_baseUrl": {
+			"type": "string",
+			"defaultValue": "https://kvSummit20221.vault.azure.net/"
+		},
+		"andyweather_csv_blob_linkedservice_sasUri": {
+			"type": "secureString",
+			"metadata": "Secure string for 'sasUri' of 'andyweather_csv_blob_linkedservice'"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/copy-pipeline')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy weather data",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "DelimitedTextSource",
+								"storeSettings": {
+									"type": "AzureBlobStorageReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings"
+								}
+							},
+							"sink": {
+								"type": "AzureSqlSink",
+								"preCopyScript": "Truncate Table [dbo].[WxReading]",
+								"writeBehavior": "insert",
+								"sqlWriterUseTableLock": false,
+								"disableMetricsCollection": false
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "Timestamp",
+											"type": "String"
+										},
+										"sink": {
+											"name": "WxReadingDateTime",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Outdoor Temperature",
+											"type": "String"
+										},
+										"sink": {
+											"name": "WxReadingOutdoorTemperature",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Outdoor Humidity",
+											"type": "String"
+										},
+										"sink": {
+											"name": "WxReadingOutdoorHumidity",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Dew Point",
+											"type": "String"
+										},
+										"sink": {
+											"name": "WxReadingDewpoint",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Heat Index",
+											"type": "String"
+										},
+										"sink": {
+											"name": "WxReadingHeatIndex",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Wind Chill",
+											"type": "String"
+										},
+										"sink": {
+											"name": "WxReadingWindChill",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Barometric Pressure",
+											"type": "String"
+										},
+										"sink": {
+											"name": "WxReadingBarometricPressure",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Rain",
+											"type": "String"
+										},
+										"sink": {
+											"name": "WxReadingRain",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Wind Speed",
+											"type": "String"
+										},
+										"sink": {
+											"name": "WxReadingWindSpeed",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Wind Average",
+											"type": "String"
+										},
+										"sink": {
+											"name": "WxReadingWindAverage",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Peak Wind",
+											"type": "String"
+										},
+										"sink": {
+											"name": "WxReadingPeakWind",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Wind Direction",
+											"type": "String"
+										},
+										"sink": {
+											"name": "WxReadingWindDirection",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Indoor Temperature",
+											"type": "String"
+										},
+										"sink": {
+											"name": "WxReadingIndoorTemperature",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Indoor Humidity",
+											"type": "String"
+										},
+										"sink": {
+											"name": "WxReadingIndoorHumidity",
+											"type": "String"
+										}
+									}
+								]
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "andyweather_csv_file_DataSet",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "andyweather_sqltable_Dataset",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/andyweather_csv_file_DataSet')]",
+				"[concat(variables('factoryId'), '/datasets/andyweather_sqltable_Dataset')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/wait-pipeline')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Wait1",
+						"type": "Wait",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"waitTimeInSeconds": 1
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"annotations": [],
+				"lastPublishTime": "2022-11-14T17:00:53Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/andyweather_csv_file_DataSet')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "andyweather_csv_blob_linkedservice",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "acuriteweather.CSV",
+						"container": "contaw"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "Timestamp",
+						"type": "String"
+					},
+					{
+						"name": "Outdoor Temperature",
+						"type": "String"
+					},
+					{
+						"name": "Outdoor Humidity",
+						"type": "String"
+					},
+					{
+						"name": "Dew Point",
+						"type": "String"
+					},
+					{
+						"name": "Heat Index",
+						"type": "String"
+					},
+					{
+						"name": "Wind Chill",
+						"type": "String"
+					},
+					{
+						"name": "Barometric Pressure",
+						"type": "String"
+					},
+					{
+						"name": "Rain",
+						"type": "String"
+					},
+					{
+						"name": "Wind Speed",
+						"type": "String"
+					},
+					{
+						"name": "Wind Average",
+						"type": "String"
+					},
+					{
+						"name": "Peak Wind",
+						"type": "String"
+					},
+					{
+						"name": "Wind Direction",
+						"type": "String"
+					},
+					{
+						"name": "Indoor Temperature",
+						"type": "String"
+					},
+					{
+						"name": "Indoor Humidity",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/andyweather_csv_blob_linkedservice')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/andyweather_sqltable_Dataset')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "andyweather_sqltable_LinkedService",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "WxReadingDateTime",
+						"type": "nvarchar"
+					},
+					{
+						"name": "WxReadingOutdoorTemperature",
+						"type": "nvarchar"
+					},
+					{
+						"name": "WxReadingOutdoorHumidity",
+						"type": "nvarchar"
+					},
+					{
+						"name": "WxReadingDewpoint",
+						"type": "nvarchar"
+					},
+					{
+						"name": "WxReadingHeatIndex",
+						"type": "nvarchar"
+					},
+					{
+						"name": "WxReadingWindChill",
+						"type": "nvarchar"
+					},
+					{
+						"name": "WxReadingBarometricPressure",
+						"type": "nvarchar"
+					},
+					{
+						"name": "WxReadingRain",
+						"type": "nvarchar"
+					},
+					{
+						"name": "WxReadingWindSpeed",
+						"type": "nvarchar"
+					},
+					{
+						"name": "WxReadingWindAverage",
+						"type": "nvarchar"
+					},
+					{
+						"name": "WxReadingPeakWind",
+						"type": "nvarchar"
+					},
+					{
+						"name": "WxReadingWindDirection",
+						"type": "nvarchar"
+					},
+					{
+						"name": "WxReadingIndoorTemperature",
+						"type": "nvarchar"
+					},
+					{
+						"name": "WxReadingIndoorHumidity",
+						"type": "nvarchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "WxReading"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/andyweather_sqltable_LinkedService')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Summit2022AzureKeyVault')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureKeyVault",
+				"typeProperties": {
+					"baseUrl": "[parameters('Summit2022AzureKeyVault_properties_typeProperties_baseUrl')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/andyweather_csv_blob_linkedservice')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobStorage",
+				"typeProperties": {
+					"sasUri": "[parameters('andyweather_csv_blob_linkedservice_sasUri')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/andyweather_sqltable_LinkedService')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureSqlDatabase",
+				"typeProperties": {
+					"connectionString": "[parameters('andyweather_sqltable_LinkedService_connectionString')]",
+					"password": {
+						"type": "AzureKeyVaultSecret",
+						"store": {
+							"referenceName": "Summit2022AzureKeyVault",
+							"type": "LinkedServiceReference"
+						},
+						"secretName": "svsummit2022SqlLoginPassword"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/Summit2022AzureKeyVault')]"
+			]
+		}
+	]
+}

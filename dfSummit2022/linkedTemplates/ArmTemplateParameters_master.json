@@ -1,0 +1,24 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "dfSummit2022"
+		},
+		"andyweather_sqltable_LinkedService_connectionString": {
+			"value": ""
+		},
+		"Summit2022AzureKeyVault_properties_typeProperties_baseUrl": {
+			"value": "https://kvSummit20221.vault.azure.net/"
+		},
+		"andyweather_csv_blob_linkedservice_sasUri": {
+			"value": ""
+		},
+		"containerUri": {
+			"value": ""
+		},
+		"containerSasToken": {
+			"value": ""
+		}
+	}
+}
