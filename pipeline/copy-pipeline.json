@@ -28,10 +28,157 @@
 					},
 					"sink": {
 						"type": "AzureSqlSink",
+						"preCopyScript": "Truncate Table [dbo].[WxReading]",
 						"writeBehavior": "insert",
-						"sqlWriterUseTableLock": false
+						"sqlWriterUseTableLock": false,
+						"disableMetricsCollection": false
 					},
-					"enableStaging": false
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "Timestamp",
+									"type": "String"
+								},
+								"sink": {
+									"name": "WxReadingDateTime",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Outdoor Temperature",
+									"type": "String"
+								},
+								"sink": {
+									"name": "WxReadingOutdoorTemperature",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Outdoor Humidity",
+									"type": "String"
+								},
+								"sink": {
+									"name": "WxReadingOutdoorHumidity",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Dew Point",
+									"type": "String"
+								},
+								"sink": {
+									"name": "WxReadingDewpoint",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Heat Index",
+									"type": "String"
+								},
+								"sink": {
+									"name": "WxReadingHeatIndex",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Wind Chill",
+									"type": "String"
+								},
+								"sink": {
+									"name": "WxReadingWindChill",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Barometric Pressure",
+									"type": "String"
+								},
+								"sink": {
+									"name": "WxReadingBarometricPressure",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Rain",
+									"type": "String"
+								},
+								"sink": {
+									"name": "WxReadingRain",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Wind Speed",
+									"type": "String"
+								},
+								"sink": {
+									"name": "WxReadingWindSpeed",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Wind Average",
+									"type": "String"
+								},
+								"sink": {
+									"name": "WxReadingWindAverage",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Peak Wind",
+									"type": "String"
+								},
+								"sink": {
+									"name": "WxReadingPeakWind",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Wind Direction",
+									"type": "String"
+								},
+								"sink": {
+									"name": "WxReadingWindDirection",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Indoor Temperature",
+									"type": "String"
+								},
+								"sink": {
+									"name": "WxReadingIndoorTemperature",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Indoor Humidity",
+									"type": "String"
+								},
+								"sink": {
+									"name": "WxReadingIndoorHumidity",
+									"type": "String"
+								}
+							}
+						]
+					}
 				},
 				"inputs": [
 					{
