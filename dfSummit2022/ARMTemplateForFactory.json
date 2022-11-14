@@ -471,6 +471,100 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/Summit2022AzureKeyVault')]"
 			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/script-pipeline')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Script1",
+						"type": "Script",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"linkedServiceName": {
+							"referenceName": "andyweather_sqltable_LinkedService",
+							"type": "LinkedServiceReference"
+						},
+						"typeProperties": {
+							"scripts": [
+								{
+									"type": "Query",
+									"text": "Insert Into dbo.Test(n)\nOutput inserted.id\nValues ('Summit22')\n"
+								}
+							],
+							"scriptBlockExecutionTimeout": "02:00:00"
+						}
+					},
+					{
+						"name": "If Condition One",
+						"type": "IfCondition",
+						"dependsOn": [
+							{
+								"activity": "Script1",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"expression": {
+								"value": "@greater(activity('Script1').output.resultsets[0].rows[0].id,pipeline().parameters.FailAtValue)",
+								"type": "Expression"
+							},
+							"ifFalseActivities": [
+								{
+									"name": "FalseFail",
+									"type": "Fail",
+									"dependsOn": [],
+									"userProperties": [],
+									"typeProperties": {
+										"message": {
+											"value": "@concat('id<=',string(pipeline().parameters.FailAtValue))",
+											"type": "Expression"
+										},
+										"errorCode": "-1001"
+									}
+								}
+							],
+							"ifTrueActivities": [
+								{
+									"name": "TrueWait",
+									"type": "Wait",
+									"dependsOn": [],
+									"userProperties": [],
+									"typeProperties": {
+										"waitTimeInSeconds": 1
+									}
+								}
+							]
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"parameters": {
+					"FailAtValue": {
+						"type": "int",
+						"defaultValue": 30
+					}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/andyweather_sqltable_LinkedService')]"
+			]
 		}
 	]
 }
